@@ -8,9 +8,14 @@ export class MovieRepository implements IMovieRepository {
         const builder = new PipelineBuilder<Movie>()
             .sort(filter?.sortBy || { createdAt: -1 })
             .limit(filter?.limit || 30);
+            
         
         if (filter?.category && filter.category.length > 0) {
             builder.in("category.slug", filter.category);
+        }
+
+        if (filter?.name) {
+            builder.regex("name", filter.name, "i");
         }
         
         const pipelineStages = builder
@@ -45,4 +50,5 @@ export class MovieRepository implements IMovieRepository {
             throw err;
         }
     }
+
 }

@@ -4,6 +4,7 @@ export type Filter = {
     limit?: number;
     sortBy?: Record<string, 1 | -1>;
     category?: string[];
+    name?: string;
 }
 
 export interface IMovieRepository {
