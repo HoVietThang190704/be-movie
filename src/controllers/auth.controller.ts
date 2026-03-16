@@ -52,7 +52,7 @@ export class AuthController {
 
   async getCurrentUser(req: Request, res: Response) {
     try {
-      const userId = req.body.userId;
+      const userId = req.userId;
       if (!userId) {
         return res.status(400).json({ message: "User ID not provided" });
       }
