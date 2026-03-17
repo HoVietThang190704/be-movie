@@ -5,9 +5,8 @@ import { User } from '../model/user';
 import { IAuthService } from './auth.service.interface';
 import { IUserService } from './user.service.interface';
 import bcrypt from 'bcrypt';
-import { issue } from 'zod/v4/core/util.cjs';
 import { JwtService } from './jwt.service';
-import { email } from 'zod';
+import { JwtPayload } from '../type/jwtpayload';
 
 export class AuthService implements IAuthService {
   private readonly userService: IUserService;
@@ -28,15 +27,25 @@ export class AuthService implements IAuthService {
 
   async login(user: LoginDto): Promise<string> {
     const existingUser = await this.userService.getUserByEmail(user.email);
-    const jwtPayLoad = { email: existingUser?.email, rule: existingUser?.rule, iat: Date.now() };
+    const jwtPayLoad: JwtPayload = {
+      userId: existingUser?._id.toString() as string,
+      email: existingUser?.email as string,
+      rule: existingUser?.rule as string,
+      iat: Date.now()
+    }
     if (!existingUser) {
       throw new Error('Invalid email or password');
-    } 
+    }
     if (!(await bcrypt.compare(user.password, existingUser.password))) {
       throw new Error('Invalid email or password');
     }
     console.log(user.email, user.password);
     const token = JwtService.getInstance().issueAccessToken(jwtPayLoad);
     return token;
+  }
+
+  async getCurrentUser(id: string): Promise<User | null> {
+    const user = await this.userService.getUserById(id);
+    return user;
   }
 }

@@ -38,6 +38,11 @@ export class PipelineBuilder<T> {
         return this;
     }
 
+    regex(filed: keyof T, pattern: string, options?: string): PipelineBuilder<T> {
+        this.pipeline.push({ $match: { [filed]: { $regex: pattern, $options: options || 'i' } } });
+        return this;
+    }
+
     build(): PipelineStage[] {
         return this.pipeline;
     }

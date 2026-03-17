@@ -49,4 +49,27 @@ export class AuthController {
       res.status(401).json({ message: "Invalid credentials" });
     }
   }
+
+  async getCurrentUser(req: Request, res: Response) {
+    try {
+      const userId = req.userId;
+      if (!userId) {
+        return res.status(400).json({ message: "User ID not provided" });
+      }
+      const user = await this.authService.getCurrentUser(userId);
+      if (!user) {
+        return res.status(404).json({ message: "User not found" });
+      }
+      const response = new BaseResponse<User>()
+        .setResponse(200)
+        .setMessage("User found")
+        .setSuccess(true)
+        .setData(user)
+        .build();
+      res.json(response);
+    } catch (error) {
+      res.status(400).json({ message: "Error fetching user" });
+
+    }
+  }
 }

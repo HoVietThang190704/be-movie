@@ -14,4 +14,7 @@ export class UserRepository implements IUserRepository {
     return await UserModel.findOne({email});
   }
 
+  async getUserById(id: string): Promise<User | null> {
+    return await UserModel.findOne({_id: id}, { password: 0 });
+  }
 }

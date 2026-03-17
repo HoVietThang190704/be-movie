@@ -22,6 +22,7 @@ export class MovieController {
             ? (req.query.category as string[])
             : [req.query.category as string]
           : undefined,
+        name: req.query.name ? (req.query.name as string) : undefined,
       };
 
       const movies = await this.movieService.getAllMovies(filter);
