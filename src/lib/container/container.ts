@@ -4,16 +4,23 @@ import { MovieController } from '../../controllers/movie.controller';
 import { IMovieRepository } from '../../repository/movie.repository.interface';
 import { IMovieService } from '../../service/movie.service.interface';
 import { AuthController } from '../../controllers/auth.controller';
+import { UserController } from '../../controllers/user.controller';
+import { CategoryController } from '../../controllers/category.controller';
+import { CategoryRepository } from '../../repository/catgory.repository.impl';
+import { CategoryService } from '../../service/category.service.impl';
 import { UserRepository } from '../../repository/user.repository.impl';
 import { IUserRepository } from '../../repository/user.repository.interface';
 import { UserService } from '../../service/user.service.impl';
 import { AuthService } from '../../service/auth.service.impl';
 import { IUserService } from '../../service/user.service.interface';
 import { IAuthService } from '../../service/auth.service.interface';
+import { ICategoryRepository } from '../../repository/catgory.repository.interface';
+import { ICategoryService } from '../../service/category.service.interface';
 
+type ServiceIdentifier = 'MovieRepository' | 'MovieService' | 'MovieController' | 'AuthController' | 'UserController' | 'CategoryController' | 'CategoryRepository' | 'CategoryService' | 'UserRepository' | 'UserService' | 'AuthService';
 class Container {
   private static instance: Container;
-  private services: Map<string, unknown> = new Map();
+  private services: Map<ServiceIdentifier, unknown> = new Map();
 
   private constructor() {
     this.registerDependencies();
@@ -37,10 +44,20 @@ class Container {
     // Register controllers
     const movieController = new MovieController(movieService);
     this.services.set('MovieController', movieController);
-    const userController = new AuthController(authService);
-    this.services.set('AuthController', userController);
+
+    // User/Auth
     const authController = new AuthController(authService);
     this.services.set('AuthController', authController);
+    const userController = new UserController(userService);
+    this.services.set('UserController', userController);
+
+    // Category
+    const categoryRepository: ICategoryRepository = new CategoryRepository();
+    this.services.set('CategoryRepository', categoryRepository);
+    const categoryService: ICategoryService = new CategoryService(categoryRepository);
+    this.services.set('CategoryService', categoryService);
+    const categoryController = new CategoryController(categoryService);
+    this.services.set('CategoryController', categoryController);
   }
 
   static getInstance(): Container {
@@ -50,7 +67,7 @@ class Container {
     return Container.instance;
   }
 
-  get<T>(serviceName: string): T {
+  get<T>(serviceName: ServiceIdentifier): T {
     const service = this.services.get(serviceName);
     if (!service) {
       throw new Error(`Service ${serviceName} not found in container`);

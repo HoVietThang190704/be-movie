@@ -4,6 +4,8 @@ import { MovieController } from "../controllers/movie.controller";
 import { createMovieRoutes } from "./movie.route";
 import { createAuthRoutes } from "./auth.route";
 import { AuthController } from "../controllers/auth.controller";
+import { CategoryController } from "../controllers/category.controller";
+import { createCategoryRoutes } from "./category.route";
 
 export default function setupRoutes(): Router {
     const router = Router();
@@ -11,9 +13,11 @@ export default function setupRoutes(): Router {
 
     const movieController = container.get<MovieController>('MovieController');
     const authController = container.get<AuthController>('AuthController');
+    const categoryController = container.get<CategoryController>('CategoryController');
 
     router.use('/movies', createMovieRoutes(movieController));
     router.use('/auth', createAuthRoutes(authController));
+    router.use('/categories', createCategoryRoutes(categoryController));
 
     return router;
 }

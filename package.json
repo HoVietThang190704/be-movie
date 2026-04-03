@@ -11,7 +11,8 @@
     "lint": "eslint . --ext .ts",
     "format": "prettier --write .",
     "seed-movies": "ts-node ./src/seed/movieseed.ts",
-    "seed-actors": "ts-node ./src/seed/actorseed.ts"
+    "seed-actors": "ts-node ./src/seed/actorseed.ts",
+    "seed-categories": "ts-node ./src/seed/categoryseed.ts"
   },
   "engines": {
     "node": ">=14"
