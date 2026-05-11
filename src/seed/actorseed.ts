@@ -1,8 +1,12 @@
 import mongoose from 'mongoose';
+import dns from 'dns';
 import { isMainThread, parentPort, Worker, workerData } from 'worker_threads';
 import { MovieModel } from '../model/movie';
 import { ActorModel } from '../model/actor';
 import { config } from '../lib/utils/config/db.config';
+
+// Set Google DNS
+dns.setServers(['8.8.8.8', '8.8.4.4']);
 
 const PEOPLE_API_URL = 'https://ophim1.com/v1/api/phim/';
 const REQUEST_TIMEOUT = 10000;

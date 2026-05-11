@@ -1,9 +1,13 @@
 import express from 'express';
 import dotenv from 'dotenv';
 import mongoose from 'mongoose';
+import dns from 'dns';
 import { config } from './lib/utils/config/db.config';
 import  setupRoutes  from './route';
 import cors, { CorsOptions } from 'cors';
+
+// Set Google DNS
+dns.setServers(['8.8.8.8', '8.8.4.4']);
 
 const app = express();
 app.use(express.json());
