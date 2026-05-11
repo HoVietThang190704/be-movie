@@ -1,7 +1,11 @@
 import { isMainThread, parentPort, Worker, workerData } from 'worker_threads';
 import mongoose from 'mongoose';
+import dns from 'dns';
 import { MovieModel } from '../model/movie';
 import { config } from '../lib/utils/config/db.config';
+
+// Set Google DNS
+dns.setServers(['8.8.8.8', '8.8.4.4']);
 
 const LIST_URL = 'https://ophim1.com/danh-sach/phim-moi-cap-nhat';
 const DETAIL_URL = 'https://ophim1.com/phim/';

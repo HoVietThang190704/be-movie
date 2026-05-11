@@ -1,7 +1,10 @@
 import mongoose from 'mongoose';
-
+import dns from 'dns';
 import { config } from '../lib/utils/config/db.config';
 import { CategoryModel } from '../model/Category';
+
+// Set Google DNS
+dns.setServers(['8.8.8.8', '8.8.4.4']);
 
 const CATEGORY_URL = 'https://ophim1.com/v1/api/the-loai';
 
