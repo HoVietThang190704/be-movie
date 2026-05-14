@@ -1,5 +1,5 @@
 import { PipelineBuilder } from '../lib/pipelinebuilder';
-import { Category, CategoryModel } from '../model/Category';
+import { Category, CategoryModel } from '../model/category';
 import { ICategoryRepository } from './catgory.repository.interface';
 
 export class CategoryRepository implements ICategoryRepository {

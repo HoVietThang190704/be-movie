@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 import dns from 'dns';
 import { config } from '../lib/utils/config/db.config';
-import { CategoryModel } from '../model/Category';
+import { CategoryModel } from '../model/category';
 
 // Set Google DNS
 dns.setServers(['8.8.8.8', '8.8.4.4']);
