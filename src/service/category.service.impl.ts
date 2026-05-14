@@ -1,4 +1,4 @@
-import { Category } from '../model/Category';
+import { Category } from '../model/category';
 import { ICategoryRepository } from '../repository/catgory.repository.interface';
 import { ICategoryService } from './category.service.interface';
 

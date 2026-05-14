@@ -1,5 +1,5 @@
 import { BaseResponse } from "../lib/baseresponse";
-import { Category } from "../model/Category";
+import { Category } from "../model/category";
 import { Request, Response } from 'express';
 import { ICategoryService } from "../service/category.service.interface";
 
