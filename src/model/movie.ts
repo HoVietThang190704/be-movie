@@ -1,5 +1,5 @@
 import { InferSchemaType, model, Schema } from 'mongoose';
-import { categorySchema } from './Category';
+import { categorySchema } from './category';
 
 export const countrySchema = new Schema({
   id: { type: String },
