@@ -16,8 +16,27 @@ import { IUserService } from '../../service/user.service.interface';
 import { IAuthService } from '../../service/auth.service.interface';
 import { ICategoryRepository } from '../../repository/catgory.repository.interface';
 import { ICategoryService } from '../../service/category.service.interface';
+import { IReleaseYearRepository } from '../../repository/releaseYear.repository.interface';
+import { ReleaseYearRepository } from '../../repository/releaseYear.repository.impl';
+import { IReleaseYearService } from '../../service/releaseYear.service.interface';
+import { ReleaseYearService } from '../../service/releaseYear.service.impl';
+import { ReleaseYearController } from '../../controllers/releaseYear.controller';
 
-type ServiceIdentifier = 'MovieRepository' | 'MovieService' | 'MovieController' | 'AuthController' | 'UserController' | 'CategoryController' | 'CategoryRepository' | 'CategoryService' | 'UserRepository' | 'UserService' | 'AuthService';
+type ServiceIdentifier =
+  | 'MovieRepository'
+  | 'MovieService'
+  | 'MovieController'
+  | 'AuthController'
+  | 'UserController'
+  | 'CategoryController'
+  | 'CategoryRepository'
+  | 'CategoryService'
+  | 'UserRepository'
+  | 'UserService'
+  | 'AuthService'
+  | 'ReleaseYearRepository'
+  | 'ReleaseYearService'
+  | 'ReleaseYearController';
 class Container {
   private static instance: Container;
   private services: Map<ServiceIdentifier, unknown> = new Map();
@@ -32,6 +51,10 @@ class Container {
     this.services.set('MovieRepository', movieRepository);
     const userRepository: IUserRepository = new UserRepository();
     this.services.set('UserRepository', userRepository);
+    const categoryRepository: ICategoryRepository = new CategoryRepository();
+    this.services.set('CategoryRepository', categoryRepository);
+    const releaseYearRepository: IReleaseYearRepository = new ReleaseYearRepository();
+    this.services.set('ReleaseYearRepository', releaseYearRepository);
 
     // Register services
     const movieService: IMovieService = new MovieService(movieRepository);
@@ -40,24 +63,22 @@ class Container {
     this.services.set('UserService', userService);
     const authService: IAuthService = new AuthService(userService);
     this.services.set('AuthService', authService);
+    const categoryService: ICategoryService = new CategoryService(categoryRepository);
+    this.services.set('CategoryService', categoryService);
+    const releaseYearService: IReleaseYearService = new ReleaseYearService(releaseYearRepository);
+    this.services.set('ReleaseYearService', releaseYearService);
 
     // Register controllers
     const movieController = new MovieController(movieService);
     this.services.set('MovieController', movieController);
-
-    // User/Auth
     const authController = new AuthController(authService);
     this.services.set('AuthController', authController);
     const userController = new UserController(userService);
     this.services.set('UserController', userController);
-
-    // Category
-    const categoryRepository: ICategoryRepository = new CategoryRepository();
-    this.services.set('CategoryRepository', categoryRepository);
-    const categoryService: ICategoryService = new CategoryService(categoryRepository);
-    this.services.set('CategoryService', categoryService);
     const categoryController = new CategoryController(categoryService);
     this.services.set('CategoryController', categoryController);
+    const releaseYearController = new ReleaseYearController(releaseYearService);
+    this.services.set('ReleaseYearController', releaseYearController);
   }
 
   static getInstance(): Container {

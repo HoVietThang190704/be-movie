@@ -12,7 +12,7 @@ export class PipelineBuilder<T> {
     }
 
     limit(limitNumber: number): PipelineBuilder<T> {
-        const maxLimit = 30;
+        const maxLimit = 100;
         limitNumber = Math.min(limitNumber, maxLimit);
         this.pipeline.push({ $limit: limitNumber });
         return this;
@@ -30,7 +30,7 @@ export class PipelineBuilder<T> {
 
     match(filter: Record<string, unknown>): PipelineBuilder<T> {
         this.pipeline.push({ $match: filter });
-        return this;    
+        return this;
     }
 
     unwind(path: string): PipelineBuilder<T> {

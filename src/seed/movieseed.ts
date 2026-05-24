@@ -83,7 +83,7 @@ if (!isMainThread) {
     /**
      * MAIN THREAD LOGIC
      */
-    const limit = 100; // Total number of pages to process from the API
+    const limit = 1000; // Total number of pages to process from the API
     const pagesPerWorker = 10;
 
     const createWorker = (startPage: number, offset: number): Promise<{ totalSaved: number }> => {

@@ -1,10 +1,13 @@
 import { Movie } from "../model/movie";
 
+export type YearRange = { gte?: number; lte?: number };
+
 export type Filter = {
     limit?: number;
     sortBy?: Record<string, 1 | -1>;
     category?: string[];
     name?: string;
+    year?: number | number[] | YearRange;
 }
 
 export interface IMovieRepository {

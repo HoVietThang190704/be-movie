@@ -22,7 +22,39 @@ export class MovieController {
             ? (req.query.category as string[])
             : [req.query.category as string]
           : undefined,
-        name: req.query.name ? (req.query.name as string) : undefined,
+          name: req.query.name ? (req.query.name as string) : undefined,
+          year: (() => {
+            const yearQuery = req.query.year;
+            if (!yearQuery) return undefined;
+
+            // Multiple query params: ?year=2022&year=2023
+            if (Array.isArray(yearQuery)) {
+              const arr = (yearQuery as string[])
+                .map(y => parseInt(y, 10))
+                .filter(n => !Number.isNaN(n));
+              return arr.length > 0 ? arr : undefined;
+            }
+
+            const ystr = (yearQuery as string).trim();
+            // Range: 2000-2010
+            if (ystr.includes('-')) {
+              const parts = ystr.split('-').map(s => parseInt(s.trim(), 10));
+              if (parts.length === 2 && !Number.isNaN(parts[0]) && !Number.isNaN(parts[1])) {
+                const [a, b] = parts;
+                return { gte: Math.min(a, b), lte: Math.max(a, b) };
+              }
+            }
+
+            // Comma separated list: 2020,2021
+            if (ystr.includes(',')) {
+              const arr = ystr.split(',').map(s => parseInt(s.trim(), 10)).filter(n => !Number.isNaN(n));
+              return arr.length > 0 ? arr : undefined;
+            }
+
+            // Single year
+            const parsed = parseInt(ystr, 10);
+            return Number.isNaN(parsed) ? undefined : parsed;
+          })(),
       };
 
       const movies = await this.movieService.getAllMovies(filter);
