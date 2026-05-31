@@ -1,0 +1,19 @@
+name: Keep backend awake
+
+on:
+  schedule:
+    - cron: '*/2 * * * *' # every 2 minutes
+  workflow_dispatch: {}
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ping backend health
+        run: |
+          URL="${{ secrets.BACKEND_URL }}"
+          if [ -z "$URL" ]; then
+            URL="https://be-movie-96xd.onrender.com"
+          fi
+          echo "Pinging $URL/api/health"
+          curl -fsS "$URL/api/health" || true
