@@ -19,5 +19,9 @@ export default function setupRoutes(): Router {
     router.use('/auth', createAuthRoutes(authController));
     router.use('/categories', createCategoryRoutes(categoryController));
 
+    router.get('/health', (_req, res) => {
+        res.json({ status: 'ok', uptime: process.uptime() });
+    });
+
     return router;
 }

@@ -3,7 +3,7 @@ import dotenv from 'dotenv';
 import mongoose from 'mongoose';
 import dns from 'dns';
 import { config } from './lib/utils/config/db.config';
-import  setupRoutes  from './route';
+import setupRoutes from './route';
 import cors, { CorsOptions } from 'cors';
 
 // Set Google DNS
@@ -12,7 +12,7 @@ dns.setServers(['8.8.8.8', '8.8.4.4']);
 const app = express();
 app.use(express.json());
 
-const allowedOrigins = process.env.ALLOWED_ORIGINS?.split(',').map(s => s.trim()) ?? [
+const allowedOrigins = process.env.ALLOWED_ORIGINS?.split(',').map((s) => s.trim()) ?? [
   'http://localhost:3000',
   'http://localhost:3001',
 ];
@@ -36,20 +36,34 @@ const corsOptions: CorsOptions = {
 app.use(cors(corsOptions));
 
 async function startServer() {
+  try {
+    const conn = await mongoose.connect(config.MONGO_URI, {
+      appName: 'Movies',
+    });
+    console.log('Connected to MongoDB:', conn.connection.name);
+
+    app.use('/api', setupRoutes());
+
+    app.listen(config.PORT, () => {
+      console.log(`Server is running on http://localhost:${config.PORT}`);
+    });
+
     try {
-        const conn = await mongoose.connect(config.MONGO_URI, {
-            appName: 'Movies'
-        });
-        console.log('Connected to MongoDB:', conn.connection.name);
-
-        app.use('/api', setupRoutes());
-
-        app.listen(config.PORT, () => {
-            console.log(`Server is running on http://localhost:${config.PORT}`);
-        });
-    } catch (error) {
-        console.error('Error connecting to MongoDB:', error);
+      const pingIntervalMs = 9 * 60 * 1000; // every 9 minutes
+      setInterval(async () => {
+        try {
+          await fetch(`http://localhost:${config.PORT}/api/health`);
+          console.log('Self-ping /api/health successful');
+        } catch (err) {
+          console.warn('Self-ping failed:', err);
+        }
+      }, pingIntervalMs);
+    } catch (err) {
+      console.warn('Failed to start self-ping:', err);
     }
+  } catch (error) {
+    console.error('Error connecting to MongoDB:', error);
+  }
 }
 
 dotenv.config();
